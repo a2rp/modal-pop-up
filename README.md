@@ -1,3 +1,7 @@
+
+![image](https://github.com/a2rp/modal-pop-up/assets/5670738/dba5627f-5729-4323-914c-923c180a9d05)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
