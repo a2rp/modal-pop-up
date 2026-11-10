@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import { toast } from "react-toastify";
 import Modal from "./modal";
@@ -41,7 +41,10 @@ const ModalComp = () => {
     const [inputValue, setInputValue] = useState("");
     const [displayModal, setDisplayModal] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const pageRef = useRef(null);
     const publicUrl = process.env.PUBLIC_URL || "";
+
+    const closeModal = useCallback(() => setDisplayModal(false), []);
 
     useEffect(() => {
         const closeMenu = () => setMenuOpen(false);
@@ -51,10 +54,12 @@ const ModalComp = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!inputValue.trim()) {
+        const trimmedValue = inputValue.trim();
+        if (!trimmedValue) {
             toast.error("Write something before opening the modal.");
             return;
         }
+        setInputValue(trimmedValue);
         setDisplayModal(true);
         setMenuOpen(false);
     };
@@ -62,18 +67,18 @@ const ModalComp = () => {
     const goToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
     return (
-        <div className={styles.page}>
+        <div className={styles.page} ref={pageRef}>
             <header className={styles.header}>
                 <a className={styles.brand} href="#home" onClick={() => setMenuOpen(false)}>
                     <img src={`${publicUrl}/logo.png`} alt="Ashish Ranjan logo" />
                     <span><small>A2RP COMPONENTS</small><strong>Modal Pop-up</strong></span>
                 </a>
-                <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`} aria-label="Main navigation">
+                <nav id="siteNavigation" className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`} aria-label="Main navigation">
                     <a href="#home" onClick={() => setMenuOpen(false)}>Overview</a>
                     <a href="#interaction" onClick={() => setMenuOpen(false)}>Interaction</a>
                     <a href="#footer" onClick={() => setMenuOpen(false)}>Links</a>
                 </nav>
-                <button className={styles.menuButton} type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen}>
+                <button className={styles.menuButton} type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="siteNavigation">
                     {menuOpen ? <FiX /> : <FiMenu />}
                 </button>
             </header>
@@ -99,14 +104,14 @@ const ModalComp = () => {
                     <div className={styles.sectionHeading}>
                         <span className={styles.eyebrow}>TRY THE DEMO</span>
                         <h2>Turn a message into a modal.</h2>
-                        <p>The form keeps its state, validates the input and presents the submitted value in a reusable dialog.</p>
+                        <p>The form checks for a message and opens a local preview. It does not send the message to a service.</p>
                     </div>
                     <form onSubmit={handleSubmit} className={styles.formCard} noValidate>
                         <div className={styles.formIcon}><FiMessageSquare /></div>
                         <div className={styles.formCopy}><label htmlFor="modalMessage">Your message</label><span>Anything short and useful.</span></div>
-                        <input id="modalMessage" value={inputValue} onChange={(event) => setInputValue(event.target.value)} placeholder="Write here something" aria-describedby="messageHint" />
+                        <input id="modalMessage" value={inputValue} onChange={(event) => setInputValue(event.target.value)} placeholder="Write a short message" maxLength={200} aria-describedby="messageHint" />
                         <button type="submit" className={styles.submitButton}>Open modal <FiArrowUpRight /></button>
-                        <small id="messageHint">A blank message will show a helpful validation toast.</small>
+                        <small id="messageHint">Up to 200 characters. A blank message shows a validation toast.</small>
                     </form>
                 </section>
 
@@ -127,7 +132,13 @@ const ModalComp = () => {
             </footer>
 
             <button className={styles.goTop} type="button" onClick={goToTop} aria-label="Go to top"><FiArrowUpRight /></button>
-            {displayModal && <Modal inputValue={inputValue} onClose={() => setDisplayModal(false)} />}
+            {displayModal && (
+                <Modal
+                    inputValue={inputValue}
+                    onClose={closeModal}
+                    backgroundElement={pageRef.current}
+                />
+            )}
         </div>
     );
 };

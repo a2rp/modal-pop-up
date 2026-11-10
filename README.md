@@ -1,12 +1,12 @@
 # Modal Pop-up
 
-A responsive React modal form component that validates user input and displays the submitted value in an accessible, reusable dialog.
+A responsive React modal form demo. Enter a short message to see it in a reusable dialog; the value stays in the browser and is not sent to a service.
 
 ## Features
 
 - Responsive fixed header with local logo and mobile navigation
-- Form validation with toast feedback
-- Modal open, close, outside-click and Escape-key interactions
+- Blank-input validation with toast feedback
+- Focus-trapped modal with focus restoration, outside-click and Escape-key closing
 - Local visual asset, responsive layout and icon-only footer links
 - Floating go-top control and dynamic copyright year
 

@@ -43,7 +43,7 @@
                                              "last 1 safari version"
                                          ]
                      },
-    "description":  "A responsive React modal form demonstration with accessible interactions.",
+    "description":  "An accessible React modal preview demo with keyboard focus management and local-only input.",
     "homepage":  "https://a2rp.github.io/modal-pop-up/",
     "license":  "MIT"
 }
